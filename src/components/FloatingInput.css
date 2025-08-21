@@ -1,0 +1,84 @@
+/* FloatingInput.css */
+.floating-input-container {
+    position: relative;
+}
+
+.floating-input {
+    width: 100%;
+    padding: 1rem 0.75rem 0.5rem 0.75rem;
+    border: 2px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: transparent;
+    outline: none;
+    transition: all 0.3s ease;
+    color: #374151;
+}
+
+.floating-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.floating-label {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: .75rem;
+    color: #6b7280;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background-color: white;
+    padding: 0 0.25rem;
+    font-weight: 600;
+}
+
+/* Cuando el input tiene valor o está enfocado */
+.floating-input:focus + .floating-label,
+.floating-input:not(:placeholder-shown) + .floating-label {
+    top: 0;
+    left: 0.5rem;
+    font-size: 0.78rem;
+    color: #3b82f6;
+    transform: translateY(-50%);
+}
+
+/* Variación con fondo más definido */
+.floating-input:focus + .floating-label,
+.floating-input:not(:placeholder-shown) + .floating-label {
+    background-color: white;
+    z-index: 1;
+}
+
+/* Hover effect */
+.floating-input-container:hover .floating-input {
+    border-color: #9ca3af;
+}
+
+.floating-input-container:hover .floating-label {
+    color: #374151;
+}
+
+/* Cuando está enfocado y tiene valor */
+.floating-input:focus:not(:placeholder-shown) + .floating-label {
+    color: #3b82f6;
+}
+
+/* Estados de error (opcional) */
+.floating-input-container.error .floating-input {
+    border-color: #ef4444;
+}
+
+.floating-input-container.error .floating-label {
+    color: #ef4444;
+}
+
+/* Estados de éxito (opcional) */
+.floating-input-container.success .floating-input {
+    border-color: #10b981;
+}
+
+.floating-input-container.success .floating-label {
+    color: #10b981;
+}
