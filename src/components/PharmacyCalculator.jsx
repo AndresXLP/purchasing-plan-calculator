@@ -5,7 +5,7 @@ import Footer from "./Footer.jsx";
 
 const PharmacyCalculator = () => {
     const [values, setValues] = useState({
-        m: null,    // meses
+        M: null,    // meses
         DI: null,   // días de inventario
         CPM: null, // consumo promedio mensual
         E: null   // existencia actual
@@ -160,14 +160,19 @@ const PharmacyCalculator = () => {
     };
 
     const handleInputChange = (field, value) => {
+        if (field === 'M' && value > 12 || value < 0) return;
+        if (field === 'DI' && value > 31 || value < 0) return;
+        if (field === 'CPM' && value < 0) return;
+        if (field === 'E' && value < 0) return;
+
         setValues(prev => ({
             ...prev,
-            [field]: parseFloat(value) || null
+            [field]: parseFloat(value)
         }));
     };
 
     useEffect(() => {
-        const {m, DI, CPM, E} = values;
+        const {M, DI, CPM, E} = values;
 
         // Solo calcular si tenemos todos los valores necesarios
         if (!CPM || !DI) {
@@ -181,24 +186,24 @@ const PharmacyCalculator = () => {
         // PR = 2 * NmE (Punto de Reorden)
         const PR = 2 * NmE;
 
-        // NME = NmE + (CPM * m) (Número Máximo de Existencia)
-        const NME = m ? NmE + (CPM * m) : null;
+        // NME = NmE + (CPM * M) (Número Máximo de Existencia)
+        const NME = M ? NmE + (CPM * M) : null;
 
-        // P = PR + (CPM * m) - E (Pedido)
-        const P = (m && E !== null) ? PR + (CPM * m) - E : null;
+        // P = PR + (CPM * M) - E (Pedido)
+        const P = (M && E !== null) ? PR + (CPM * M) - E : null;
 
         setResults({
             NmE: Math.ceil(NmE),  // Siempre redondea hacia arriba
             PR: Math.round(PR),
             NME: NME ? Math.round(NME) : null,
             P: P ? Math.round(P) : null,
-            stockTotal: m ? Math.round(CPM * m) : null
+            stockTotal: M ? Math.round(CPM * M) : null
         });
     }, [values]);
 
     return (
         <div className="max-w-6xl mx-auto p-6 min-h-screen">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
                     <div className="flex items-center justify-center gap-3 text-center">
                         <div>
@@ -220,8 +225,8 @@ const PharmacyCalculator = () => {
                                 <FloatingInput
                                     id="meses"
                                     label="M = Meses para los que se compran"
-                                    value={values.m || ''}
-                                    onChange={(e) => handleInputChange('m', e.target.value)}
+                                    value={values.M || ''}
+                                    onChange={(e) => handleInputChange('M', e.target.value)}
                                     min="1"
                                     max="12"
                                 />
@@ -246,7 +251,7 @@ const PharmacyCalculator = () => {
                                 <FloatingInput
                                     id="existencia-actual"
                                     label="E = Existencia actual (cajas)"
-                                    value={values.E || ''}
+                                    value={values.E}
                                     onChange={(e) => handleInputChange('E', e.target.value)}
                                     min="0"
                                 />
@@ -301,7 +306,7 @@ const PharmacyCalculator = () => {
                                         {results.NME || 0} cajas
                                     </p>
                                     <p className="text-sm text-gray-600">
-                                        {results.NmE || 'NmE'} + ({values.CPM || 'CPM'} × {values.m || 'M'})
+                                        {results.NmE || 'NmE'} + ({values.CPM || 'CPM'} × {values.M || 'M'})
                                     </p>
                                 </div>
 
@@ -316,7 +321,7 @@ const PharmacyCalculator = () => {
                                         {results.P || 0} cajas
                                     </p>
                                     <p className="text-sm text-gray-600">
-                                        {results.PR || 'PR'} + ({values.CPM || 'CPM'} × {values.m || 'M'}) - {values.E || 'E'}
+                                        {results.PR || 'PR'} + ({values.CPM || 'CPM'} × {values.M || 'M'}) - {values.E || 'E'}
                                     </p>
                                 </div>
                             </div>
